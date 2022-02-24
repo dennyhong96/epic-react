@@ -6,20 +6,40 @@
   <script src="https://unpkg.com/react@17.0.0/umd/react.development.js"></script>
   <script src="https://unpkg.com/react-dom@17.0.0/umd/react-dom.development.js"></script>
 
-  <!-- 🐨 add Babel to the page.
-       💰 Here is the script tag that'll do the job:
+  <!-- 🐨 add Babel to the page. -->
   <script src="https://unpkg.com/@babel/standalone@7.12.4/babel.js"></script>
-  -->
 
-  <script type="module">
+  <!-- Babel will look for every script tag with text/babel and transpile it down, then put a normal script tag into the <head/>  -->
+  <!-- Browser will ignore this script because it doesn't understand the type text/babel -->
+  <script type="text/babel">
     // 🐨 on the script tag above, change `type="module"`
     // to `type="text/babel"` so babel will compile this code for the browser to run.
 
     // 🐨 re-implement this using JSX!
-    const element = React.createElement('div', {
-      className: 'container',
-      children: 'Hello World',
-    })
+    // const element = React.createElement('div', {
+    //   className: 'container',
+    //   children: 'Hello World',
+    // })
+
+    const className = 'container'
+    const hello = 'Hello'
+    const world = 'World'
+    const children = `${hello} ${world}`
+
+    // Spread props
+    const props = {
+      className,
+      children,
+    }
+    const element = <div id="my-id" {...props} className="default" />
+
+    console.log(element)
+
+    // const element = (
+    //   <div className={className}>
+    //     {hello} {world}
+    //   </div>
+    // )
 
     // 💰 there are a few subtle differences between JSX and HTML. One such
     // difference is how you apply a class to an element in JSX is by using
