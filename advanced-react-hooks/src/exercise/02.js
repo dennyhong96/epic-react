@@ -47,7 +47,9 @@ function useSafeDispatch(dispatch) {
   const mountedRef = React.useRef(false);
 
   // useLayoutEffect is invoked as soon as component is mounted
-  // without waiting for browser to paint the screen
+  // without waiting for browser to paint the screen,
+  // use only when you want to unsure this runs befor anything else
+  // or you want to make changes to the DOM before browser paints
   React.useLayoutEffect(() => {
     mountedRef.current = true;
     return () => {
