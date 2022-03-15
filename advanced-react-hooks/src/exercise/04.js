@@ -10,8 +10,14 @@ function MessagesDisplay({messages}) {
   //   - If you are making observable changes to the DOM, then it should happen in useLayoutEffect
   //   - otherwise useEffect.
   React.useLayoutEffect(() => {
-    containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    // element.scrollTop is the portion that's already scrolled (outside of the client's visible portion)
+    // element.scrollHeight is the total height, including the portion outside of the client's visible portion, and the client's height
+    // element.clientHeight is the height of the element
+    // When fully scrolled to bottom, el.scrollHeight - el.scrollTop = el.clientHeight
+    containerRef.current.scrollTop =
+      containerRef.current.scrollHeight - containerRef.current.clientHeight;
   });
+  // useLayoutEffect runs after re-renders, before browser paints
 
   return (
     <div ref={containerRef} role="log">
