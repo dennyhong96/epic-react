@@ -5,6 +5,7 @@ import * as React from "react";
 import {Switch} from "../switch";
 
 const ToggleContext = React.createContext(null);
+ToggleContext.displayName = "ToggleContext";
 const ToggleProvider = ({children}) => {
 	const [on, setOn] = React.useState(false);
 	const toggle = React.useCallback(() => setOn(!on), [on]);
@@ -59,8 +60,3 @@ function App() {
 }
 
 export default App;
-
-/*
-eslint
-  no-unused-vars: "off",
-*/

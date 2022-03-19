@@ -8,33 +8,27 @@ import {Switch} from "../switch";
 // 📜 https://reactjs.org/docs/react-api.html#reactchildren
 // 📜 https://reactjs.org/docs/react-api.html#cloneelement
 
+const allowedTypes = [
+	"ToggleOn",
+	"ToggleOff",
+	"ToggleButton",
+	"MyToggleButton",
+];
+
 function Toggle({children}) {
 	const [on, setOn] = React.useState(false);
 	const toggle = () => setOn(!on);
-
-	// 🐨 replace this with a call to React.Children.map and map each child in
-	// props.children to a clone of that child with the props they need using
-	// React.cloneElement.
-
 	return React.Children.map(children, child => {
 		console.log(child);
-		if (typeof child.type === "string") return child;
-		switch (child.type.name) {
-			case "ToggleOn":
-			case "ToggleOff": {
-				return React.cloneElement(child, {on});
-			}
-			case "ToggleButton": {
-				return React.cloneElement(child, {on, toggle});
-			}
-			default: {
-				return null;
-			}
+		if (
+			typeof child.type === "string" ||
+			!allowedTypes.includes(child.type.name)
+		) {
+			return child;
 		}
+		return React.cloneElement(child, {on, toggle});
 	});
 }
-
-// 🐨 Flesh out each of these components
 
 // Accepts `on` and `children` props and returns `children` if `on` is true
 const ToggleOn = ({children, on}) => (on ? children : null);
@@ -44,6 +38,9 @@ const ToggleOff = ({children, on}) => (on ? null : children);
 
 // Accepts `on` and `toggle` props and returns the <Switch /> with those props.
 const ToggleButton = ({on, toggle}) => <Switch on={on} onClick={toggle} />;
+
+// User can also grab implicitly shared state and create custom compound component children
+const MyToggleButton = ({on}) => (on ? "On yoo!" : "Off yoo!");
 
 Toggle.On = ToggleOn;
 Toggle.Off = ToggleOff;
@@ -56,15 +53,11 @@ function App() {
 				<Toggle.On>The button is on</Toggle.On>
 				<Toggle.Off>The button is off</Toggle.Off>
 				<Toggle.Button />
-				<span>Hello</span>
+				<p>Hello</p>
+				<MyToggleButton />
 			</Toggle>
 		</div>
 	);
 }
 
 export default App;
-
-/*
-eslint
-  no-unused-vars: "off",
-*/

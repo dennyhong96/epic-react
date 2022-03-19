@@ -4,22 +4,25 @@
 import * as React from "react";
 import {Switch} from "../switch";
 
+const callFuncs =
+	(...funcs) =>
+	(...args) =>
+		funcs.forEach(func => func?.(...args));
+
 function useToggle() {
 	const [on, setOn] = React.useState(false);
-	const toggle = React.useCallback(() => setOn(!on), [on]);
-	const getTogglerProps = React.useCallback(
-		customProps => {
-			return {
-				"aria-pressed": on,
-				onClick: toggle,
-				...customProps,
-			};
-		},
-		[on, toggle],
-	);
+	const toggle = () => setOn(!on);
+	const getTogglerProps = ({onClick, ...customProps} = {}) => {
+		return {
+			"aria-pressed": on,
+			onClick: callFuncs(toggle, onClick),
+			...customProps,
+		};
+	};
 	return {
-		on,
-		getTogglerProps,
+		on, // still provide on prop here in case hook is not used specifically for a toggle component
+		toggle, // still provide toggle prop
+		getTogglerProps, // returns all the props that are typically needed by a switch/toggle type component
 	};
 }
 
@@ -27,7 +30,7 @@ function App() {
 	const {on, getTogglerProps} = useToggle();
 	return (
 		<div>
-			<Switch on={on} {...getTogglerProps()} />
+			<Switch {...getTogglerProps({on})} />
 			<hr />
 			<button
 				{...getTogglerProps({
@@ -43,8 +46,3 @@ function App() {
 }
 
 export default App;
-
-/*
-eslint
-  no-unused-vars: "off",
-*/
