@@ -1,22 +1,77 @@
 // testing custom hooks
-// http://localhost:3000/counter-hook
 
 import * as React from 'react'
-import {render, screen} from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import {act} from 'react-dom/test-utils'
+import {render, renderHook} from '@testing-library/react'
+
 import useCounter from '../../components/use-counter'
 
-// 🐨 create a simple function component that uses the useCounter hook
-// and then exposes some UI that our test can interact with to test the
-// capabilities of this hook
-// 💰 here's how to use the hook:
-// const {count, increment, decrement} = useCounter()
+const setup = () => {
+  const hookReturnVal = {}
+  const TestComponent = () => {
+    Object.assign(hookReturnVal, useCounter())
+    return null
+  }
+  render(<TestComponent />)
+  return hookReturnVal
+}
 
 test('exposes the count and increment/decrement functions', () => {
-  // 🐨 render the component
-  // 🐨 get the elements you need using screen
-  // 🐨 assert on the initial state of the hook
-  // 🐨 interact with the UI using userEvent and assert on the changes in the UI
+  const hookReturnVal = setup()
+
+  expect(hookReturnVal).toEqual({
+    count: 0,
+    increment: expect.any(Function),
+    decrement: expect.any(Function),
+  })
+
+  act(() => {
+    hookReturnVal.increment()
+  })
+
+  expect(hookReturnVal).toEqual({
+    count: 1,
+    increment: expect.any(Function),
+    decrement: expect.any(Function),
+  })
+
+  act(() => {
+    hookReturnVal.decrement()
+  })
+
+  expect(hookReturnVal).toEqual({
+    count: 0,
+    increment: expect.any(Function),
+    decrement: expect.any(Function),
+  })
 })
 
-/* eslint no-unused-vars:0 */
+test('exposes the count and increment/decrement functions (renderHook)', () => {
+  const {result} = renderHook(useCounter)
+
+  expect(result.current).toEqual({
+    count: 0,
+    increment: expect.any(Function),
+    decrement: expect.any(Function),
+  })
+
+  act(() => {
+    result.current.increment()
+  })
+
+  expect(result.current).toEqual({
+    count: 1,
+    increment: expect.any(Function),
+    decrement: expect.any(Function),
+  })
+
+  act(() => {
+    result.current.decrement()
+  })
+
+  expect(result.current).toEqual({
+    count: 0,
+    increment: expect.any(Function),
+    decrement: expect.any(Function),
+  })
+})

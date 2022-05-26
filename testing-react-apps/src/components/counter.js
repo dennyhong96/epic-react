@@ -8,9 +8,13 @@ function Counter() {
   const decrement = () => setCount(c => c - 1)
   return (
     <div>
-      <div>Current count: {count}</div>
-      <button onClick={decrement}>Decrement</button>
-      <button onClick={increment}>Increment</button>
+      <div data-testid="message">Current count: {count}</div>
+      <button data-testid="decrement" onClick={decrement}>
+        Decrement
+      </button>
+      <button data-testid="increment" onClick={increment}>
+        Increment
+      </button>
     </div>
   )
 }

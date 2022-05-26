@@ -1,5 +1,4 @@
 // simple test with ReactDOM
-// http://localhost:3000/counter
 
 import * as React from 'react'
 import {act} from 'react-dom/test-utils'
@@ -12,24 +11,42 @@ import Counter from '../../components/counter'
 global.IS_REACT_ACT_ENVIRONMENT = true
 
 test('counter increments and decrements when the buttons are clicked', () => {
-  // 🐨 create a div to render your component to (💰 document.createElement)
-  //
-  // 🐨 append the div to document.body (💰 document.body.append)
-  //
-  // 🐨 use createRoot to render the <Counter /> to the div
-  // 🐨 get a reference to the increment and decrement buttons:
-  //   💰 div.querySelectorAll('button')
-  // 🐨 get a reference to the message div:
-  //   💰 div.firstChild.querySelector('div')
-  //
-  // 🐨 expect the message.textContent toBe 'Current count: 0'
-  // 🐨 click the increment button (💰 act(() => increment.click()))
-  // 🐨 assert the message.textContent
-  // 🐨 click the decrement button (💰 act(() => decrement.click()))
-  // 🐨 assert the message.textContent
-  //
-  // 🐨 cleanup by removing the div from the page (💰 div.remove())
-  // 🦉 If you don't cleanup, then it could impact other tests and/or cause a memory leak
-})
+  // render the component
+  const container = document.createElement('div')
+  document.body.append(container)
+  const root = createRoot(container)
+  act(() => {
+    root.render(<Counter />)
+  })
 
-/* eslint no-unused-vars:0 */
+  // get elements
+  const incrementButton = container.querySelector(
+    'button[data-testid="increment"]',
+  )
+  const decrementButton = container.querySelector(
+    'button[data-testid="decrement"]',
+  )
+  const message = container.querySelector('div[data-testid="message"]')
+
+  // act and assert
+  expect(message.textContent).toBe(`Current count: 0`)
+
+  const clickEvent = new MouseEvent('click', {
+    bubbles: true,
+    cancelable: true,
+    button: 0,
+  })
+
+  act(() => {
+    incrementButton.dispatchEvent(clickEvent)
+  })
+  expect(message.textContent).toBe(`Current count: 1`)
+  act(() => {
+    decrementButton.dispatchEvent(clickEvent)
+  })
+  expect(message.textContent).toBe(`Current count: 0`)
+
+  // clean up
+  container.remove()
+  // If you don't cleanup, then it could impact other tests and/or cause a memory leak
+})

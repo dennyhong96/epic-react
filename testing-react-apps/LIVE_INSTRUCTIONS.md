@@ -36,9 +36,9 @@ exercise logistics.
 Here are the basic things you need to make sure you do (in addition to watching
 [the example run through](https://epicreact.dev/modules/welcome-to-epic-react/example-runthrough)):
 
-- [ ] Ensure you satisfy all the "Prerequisites" and "System Requirements" found
+- [x] Ensure you satisfy all the "Prerequisites" and "System Requirements" found
       in the `README.md`.
-- [ ] Run the project setup as documented in the `README.md` (~5 minutes)
+- [x] Run the project setup as documented in the `README.md` (~5 minutes)
 
 If our workshop is remote via Zoom:
 
