@@ -19,7 +19,7 @@ test('counter increments and decrements when the buttons are clicked', () => {
 
   expect(message.textContent).toBe('Current count: 0')
 
-  fireEvent.click(increment)
+  fireEvent.click(increment) // fireEvent is wrapped in act() automatically
   expect(message.textContent).toBe('Current count: 1')
   fireEvent.click(decrement)
   expect(message.textContent).toBe('Current count: 0')

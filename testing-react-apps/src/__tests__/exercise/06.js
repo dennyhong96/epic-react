@@ -27,13 +27,14 @@ function deferred() {
 // await promise
 // assert on the resolved state
 
-// beforeAll(() => {
-//   // 📜 https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition
-//   window.navigator.geolocation = {
-//     getCurrentPosition: jest.fn(),
-//   }
-// })
+beforeAll(() => {
+  // 📜 https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition
+  window.navigator.geolocation = {
+    getCurrentPosition: jest.fn(),
+  }
+})
 
+// Option 1. Mock the web getCurrentPosition API
 test.skip('displays the users current location', async () => {
   // 📜 https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition
   const fakePosition = {
@@ -76,6 +77,7 @@ test.skip('displays the users current location', async () => {
   ).toBeInTheDocument()
 })
 
+// Option 2. Mock the custom hook
 test('displays the users current location (mock module)', async () => {
   // 📜 https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition
   const fakePosition = {
@@ -85,6 +87,7 @@ test('displays the users current location (mock module)', async () => {
     },
   }
 
+  // Mock the useMockCurrentPosition hook with a useState
   let setCurrentPosition
   function useMockCurrentPosition() {
     const [state, setState] = React.useState([])
@@ -100,6 +103,7 @@ test('displays the users current location (mock module)', async () => {
 
   expect(screen.getByLabelText('loading...')).toBeInTheDocument()
 
+  // State updates are wrapped in act()
   act(() => {
     setCurrentPosition([fakePosition, undefined])
   })

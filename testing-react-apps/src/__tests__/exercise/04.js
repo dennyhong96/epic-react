@@ -3,8 +3,7 @@
 import * as React from 'react'
 import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import faker from 'faker'
-import {build} from '@jackfranklin/test-data-bot'
+import {build, fake} from '@jackfranklin/test-data-bot'
 
 import Login from '../../components/login'
 
@@ -15,10 +14,13 @@ import Login from '../../components/login'
 //   }
 // }
 
+// Use generated fake data to communicate that this data doesn't matter
+// to whether a test should pass or fail
 const buildLoginForm = build('LoginForm', {
   fields: {
-    username: faker.internet.userName(),
-    password: faker.internet.password(),
+    // Returns new test data everytime `buildLoginForm` is called
+    username: fake(faker => faker.internet.userName()),
+    password: fake(faker => faker.internet.password()),
   },
 })
 
@@ -28,6 +30,8 @@ test('submitting the form calls onSubmit with username and password', async () =
   render(<Login onSubmit={handleSubmit} />)
 
   const usernameInput = screen.getByRole('textbox', {name: /username/i})
+
+  // password type input doesn't have a role for security reasons
   const passwordinput = screen.getByLabelText(/Password/i)
   const submitButton = screen.getByRole('button', {name: /submit/i})
 

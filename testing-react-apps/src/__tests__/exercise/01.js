@@ -32,9 +32,9 @@ test('counter increments and decrements when the buttons are clicked', () => {
   expect(message.textContent).toBe(`Current count: 0`)
 
   const clickEvent = new MouseEvent('click', {
-    bubbles: true,
+    bubbles: true, // must bubble because react uses event delegation ender the hook
     cancelable: true,
-    button: 0,
+    button: 0, // left click
   })
 
   act(() => {
