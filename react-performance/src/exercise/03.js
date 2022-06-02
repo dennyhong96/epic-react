@@ -6,7 +6,7 @@ import {useCombobox} from '../use-combobox'
 import {getItems} from '../workerized-filter-cities'
 import {useAsync, useForceRerender} from '../utils'
 
-function Menu({
+const Menu = React.memo(function Menu({
   items,
   getMenuProps,
   getItemProps,
@@ -21,27 +21,30 @@ function Menu({
           getItemProps={getItemProps}
           item={item}
           index={index}
-          selectedItem={selectedItem}
-          highlightedIndex={highlightedIndex}
+          isSelected={selectedItem?.id === item.id}
+          isHighlighted={highlightedIndex === index}
         >
           {item.name}
         </ListItem>
       ))}
     </ul>
   )
-}
+})
 // 🐨 Memoize the Menu here using React.memo
 
-function ListItem({
+const ListItem = React.memo(function ListItem({
   getItemProps,
   item,
   index,
-  selectedItem,
-  highlightedIndex,
+
+  // React.memo() does shallow comparasion for props
+  // pass primitive value as props, so we don't need to use custom comparator for React.memo()
+  // calculations can be done higher up in the tree
+  isSelected,
+  isHighlighted,
+
   ...props
 }) {
-  const isSelected = selectedItem?.id === item.id
-  const isHighlighted = highlightedIndex === index
   return (
     <li
       {...getItemProps({
@@ -55,7 +58,54 @@ function ListItem({
       })}
     />
   )
-}
+})
+
+// const ListItem = React.memo(
+//   function ({
+//     getItemProps,
+//     item,
+//     index,
+//     selectedItem,
+//     highlightedIndex,
+//     ...props
+//   }) {
+//     const isSelected = selectedItem?.id === item.id
+//     const isHighlighted = highlightedIndex === index
+//     return (
+//       <li
+//         {...getItemProps({
+//           index,
+//           item,
+//           style: {
+//             fontWeight: isSelected ? 'bold' : 'normal',
+//             backgroundColor: isHighlighted ? 'lightgray' : 'inherit',
+//           },
+//           ...props,
+//         })}
+//       />
+//     )
+//   },
+//   (prevProps, nextProps) => {
+//     // true means do NOT rerender
+//     // false means DO rerender
+
+//     // these ones are easy if any of these changed, we should re-render
+//     if (prevProps.getItemProps !== nextProps.getItemProps) return false
+//     if (prevProps.item !== nextProps.item) return false
+//     if (prevProps.index !== nextProps.index) return false
+//     if (prevProps.selectedItem !== nextProps.selectedItem) return false
+
+//     // this is trickier. We should only re-render if this list item:
+//     // 1. was highlighted before and now it's not
+//     // 2. was not highlighted before and now it is
+//     if (prevProps.highlightedIndex !== nextProps.highlightedIndex) {
+//       const wasPrevHighlighted = prevProps.highlightedIndex === prevProps.index
+//       const isNowHighlighted = nextProps.highlightedIndex === nextProps.index
+//       return wasPrevHighlighted === isNowHighlighted
+//     }
+//     return true
+//   },
+// )
 // 🐨 Memoize the ListItem here using React.memo
 
 function App() {

@@ -6,13 +6,14 @@ function CountButton({count, onClick}) {
   return <button onClick={onClick}>{count}</button>
 }
 
-function NameInput({name, onNameChange}) {
+const NameInput = React.memo(function ({name, onNameChange}) {
+  // React.memo relies on same props each call to prevent necessary rerenders
   return (
     <label>
       Name: <input value={name} onChange={e => onNameChange(e.target.value)} />
     </label>
   )
-}
+})
 
 function Example() {
   const [name, setName] = React.useState('')
